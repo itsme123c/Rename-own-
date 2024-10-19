@@ -6,6 +6,6 @@ COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 8000  # Change this if needed
+EXPOSE 8000  # Expose port 8000 for the Flask app
 
 CMD ["python", "main.py"]
