@@ -1,9 +1,13 @@
 import os
+from flask import Flask, request
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from telegram.ext import filters
 
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+
+app = Flask(__name__)
+application = ApplicationBuilder().token(TOKEN).build()
 
 # In-memory storage for the current name and thumbnail
 current_name = ""
@@ -33,13 +37,12 @@ async def show_info(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     info += f"Current Thumbnail: {'Set' if current_thumbnail else 'Not set'}"
     await update.message.reply_text(info)
 
-if __name__ == '__main__':
-    app = ApplicationBuilder().token(TOKEN).build()
-    
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("rename", rename))
-    app.add_handler(MessageHandler(filters.PHOTO, set_thumbnail))
-    app.add_handler(CommandHandler("info", show_info))
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    update = request.get_json()
+    application.process_update(Update.de_json(update, application.bot))
+    return 'OK'
 
-    app.run_polling()
+if __name__ == '__main__':
+    app.run(port=8000)  # Ensure this port matches your health check
     
