@@ -1,6 +1,7 @@
 import os
-from telegram import Update, InputFile
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, Filters, ContextTypes
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes
+from telegram.ext import filters
 
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
@@ -37,7 +38,8 @@ if __name__ == '__main__':
     
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("rename", rename))
-    app.add_handler(MessageHandler(Filters.photo, set_thumbnail))
+    app.add_handler(MessageHandler(filters.PHOTO, set_thumbnail))
     app.add_handler(CommandHandler("info", show_info))
 
     app.run_polling()
+    
