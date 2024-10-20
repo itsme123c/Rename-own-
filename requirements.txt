@@ -1,3 +1,3 @@
+Flask==2.0.3
 python-telegram-bot==20.0
-Flask==2.0.0  # Adjust the version as needed
-
+Werkzeug==2.0.3
